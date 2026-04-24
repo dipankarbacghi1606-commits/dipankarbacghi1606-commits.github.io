@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Dipankar | Hardware Builder & Tech Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Custom cursor only for desktop */
+        @media (hover: hover) and (pointer: fine) {
+            body {
+                cursor: none !important;
+            }
+
+            .cursor {
+                display: flex;
+            }
+
+            a,
+            button,
+            .card,
+            .badge,
+            .nav-links a {
+                cursor: none !important;
+            }
+        }
+
+        .cursor {
+            width: 40px;
+            height: 40px;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            display: none;
+            transition: transform 0.1s ease-out;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .cursor .rect {
+            stroke-dasharray: 400;
+            stroke-dashoffset: 400;
+            transition: stroke-dashoffset 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s;
+            opacity: 0;
+        }
+
+        .cursor .crosshair {
+            transition: opacity 0.3s;
+            opacity: 1;
+        }
+
+        .cursor.hover .rect,
+        .cursor.clicked .rect {
+            stroke-dashoffset: 0;
+            opacity: 1;
+        }
+
+        .cursor.hover .crosshair,
+        .cursor.clicked .crosshair {
+            opacity: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #05020a;
+            color: #f0f4ff;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, #2b0d4f, #0a0f1f 70%);
+            z-index: -2;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(125deg, rgba(17, 7, 34, 0.92) 0%, rgba(6, 20, 37, 0.9) 45%, rgba(5, 46, 36, 0.85) 100%);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background: rgba(5, 2, 10, 0.75);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+        }
+
+        .nav-logo {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #60a5fa, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: rgba(203, 213, 225, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 100px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        section {
+            margin-bottom: 120px;
+            padding-top: 40px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 30%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+
+        h2 i {
+            color: #60a5fa;
+            font-size: 1.2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(96, 165, 250, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(96, 165, 250, 0.1);
+        }
+
+        .project-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card .project-desc {
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.5s ease, opacity 0.4s ease, margin-top 0.3s;
+            color: #cbd5e1;
+            margin-top: 0;
+        }
+
+        .project-card:hover .project-desc {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        header {
+            text-align: center;
+            padding: 120px 20px 80px;
+        }
+
+        .hero-hook {
+            font-size: 1.2rem;
+            margin-top: 24px;
+            color: rgba(203, 213, 225, 0.9);
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: #ffffff;
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-weight: 500;
+        }
+
+        .tagline span {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .tagline span:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 25px;
+            text-align: center;
+        }
+
+        .stat h3 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .stat p {
+            color: rgba(203, 213, 225, 0.6);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            margin-top: 8px;
+        }
+
+        .featured-project {
+            border: 2px solid #3b82f6;
+            background: rgba(30, 20, 60, 0.7);
+            box-shadow: 0 0 35px #3b82f640;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(12, 6, 28, 0.8);
+            border: 1px solid rgba(99, 130, 246, 0.5);
+            border-radius: 14px;
+            color: #ede9ff;
+            font-size: 1rem;
+            transition: 0.25s;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 28px #3b82f6cc;
+            background: #140f2b;
+        }
+
+        button {
+            background: #ffffff;
+            color: #000000;
+            padding: 16px 40px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            cursor: none;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: #f0f0f0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 80px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(154, 139, 191, 0.6);
+            margin-top: 100px;
+        }
+
+        .flex-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .colorful-text {
+            color: #60a5fa;
+            font-weight: 700;
+        }
+
+        .accent-green {
+            color: #4ade80;
+            font-weight: 700;
+        }
+
+        .accent-purple {
+            color: #a5b4fc;
+            font-weight: 700;
+        }
+
+        .accent-gold {
+            color: #fbbf24;
+            font-weight: 700;
+        }
+
+        /* Scroll animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 900px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            /* Hide on mobile for a clean look or implement drawer */
+
+            /* Simple mobile nav reveal: we can keep it simple or add a toggle */
+            /* For now, let's just make the links smaller and centered */
+            .nav-links {
+                display: flex;
+                position: fixed;
+                bottom: 24px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(15, 12, 30, 0.85);
+                backdrop-filter: blur(24px);
+                padding: 8px 16px;
+                border-radius: 100px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                z-index: 1000;
+                width: 85%;
+                max-width: 450px;
+                justify-content: space-around;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(96, 165, 250, 0.1);
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+                padding: 10px 14px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .nav-links a.active {
+                color: #ffffff;
+                background: rgba(255, 255, 255, 0.1);
+                box-shadow: inset 0 0 10px rgba(96, 165, 250, 0.2);
+            }
+
+            section {
+                margin-bottom: 80px;
+            }
+
+            header {
+                padding: 80px 20px 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor" id="cursor">
+        <svg viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="cursorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:#ff00ff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff007f;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <!-- The Frame -->
+            <rect class="rect" x="5" y="5" width="90" height="90" rx="15" fill="none" stroke="url(#cursorGrad)"
+                stroke-width="6" />
+            <!-- The Precision Crosshair -->
+            <g class="crosshair">
+                <line x1="50" y1="25" x2="50" y2="75" stroke="#00f2ff" stroke-width="4" />
+                <line x1="25" y1="50" x2="75" y2="50" stroke="#00f2ff" stroke-width="4" />
+                <circle cx="50" cy="50" r="3" fill="#00f2ff" />
+            </g>
+        </svg>
+    </div>
+    <div class="bg-layer"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Navigation bar -->
+    <nav>
+        <div class="nav-container">
+            <span class="nav-logo"><i class="fas fa-microchip"></i> Dipankar Bagchi</span>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#stats">Stats</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="container fade-up" id="hero">
+        <h1>Dipankar Bagchi</h1>
+        <div class="tagline">
+            <span><i class="fas fa-microchip"></i> Hardware Builder</span>
+            <span><i class="fas fa-code"></i> Full-Stack Developer</span>
+            <span><i class="fas fa-lightbulb"></i> Entrepreneur</span>
+        </div>
+        <p class="hero-hook">
+            <span class="colorful-text">Turning ideas into tangible tech.</span> I design digital platforms and build
+            physical hardware — from circuit to cloud.
+        </p>
+    </header>
+
+    <main class="container">
+        <section id="about" class="fade-up">
+            <h2><i class="fas fa-user-astronaut"></i> About</h2>
+            <div class="card">
+                <p style="font-size: 1.1rem; line-height: 1.7; color:#e9e0ff;">
+                    I am currently a <span class="accent-gold">Class 11 student</span>, actively building skills in
+                    technology, design, and problem-solving.
+                    My work focuses on both <span class="colorful-text">software and hardware</span>—from developing
+                    websites and applications to experimenting
+                    with electronic systems and physical prototypes.
+                    <br><br>
+                    I have worked on multiple projects including web development, Python-based applications, and
+                    introductory
+                    machine learning models. Alongside this, I explore hardware by building functional devices and
+                    understanding
+                    how systems operate beyond the screen.
+                    <br><br>
+                    I am a thinker and a creative individual who enjoys analyzing ideas and turning them into <span
+                        class="accent-green">practical solutions</span>.
+                    My interests extend into <span class="accent-purple">automotive engineering</span>—I am a car
+                    enthusiast with a strong curiosity about performance
+                    and design, along with a deep interest in <span class="accent-gold">Formula 1</span>. I also
+                    appreciate precision and engineering through <span class="accent-purple">premium watches</span>,
+                    reflecting my attention to detail.
+                    <br><br>
+                    I was born in <span class="accent-green">Indore</span> (Madhya Pradesh) and have lived in multiple
+                    cities including <span class="accent-green">Tezpur</span> and <span
+                        class="accent-green">Guwahati</span>, and I am
+                    currently based in <span class="accent-green">Kolkata</span>. Having studied in <span
+                        class="colorful-text">6 different schools</span>, I have experienced diverse environments and
+                    perspectives. Coming from a <span class="accent-gold">middle-class background</span>, I understand
+                    real-world needs—especially those of students
+                    and everyday users—which helps me build more practical and relevant solutions.
+                    <br><br>
+                    I am comfortable communicating in multiple languages including <span
+                        style="font-style: italic; color: #60a5fa;">Hindi, English, and Bengali</span>, with a basic
+                    understanding of <span style="font-style: italic; color: #60a5fa;">French</span>. This multilingual
+                    exposure helps me connect with different audiences and think from
+                    broader perspectives.
+                    <br><br>
+                    I approach everything with a <span class="colorful-text">builder mindset</span>—focusing on creating
+                    real systems, improving through execution,
+                    and thinking long-term. My goal is to grow into advanced technologies and eventually build <span
+                        class="accent-green">scalable products</span>
+                    and <span class="accent-purple">impactful businesses</span>.
+                </p>
+            </div>
+        </section>
+
+        <section id="vision" class="fade-up">
+            <h2><i class="fas fa-binoculars"></i> Vision</h2>
+            <div class="card">
+                <p style="font-size: 1.1rem; line-height: 1.7; color:#dbd0ff;">
+                    My vision is to build a <span class="colorful-text">technology ecosystem</span> that seamlessly
+                    integrates software and hardware into unified, scalable systems. I aim to begin by creating <span
+                        class="colorful-text">high-impact digital products</span>—websites, applications, and
+                    platforms—that solve real-world problems and deliver value efficiently.
+                    <br><br>
+                    As these products evolve, the focus expands toward platform-level thinking: connecting individual
+                    solutions into larger systems, optimizing performance, and designing architectures that scale across
+                    users, use cases, and industries. This stage emphasizes efficiency, usability, and long-term
+                    sustainability.
+                    <br><br>
+                    The next step is advancing into <span class="colorful-text">hardware innovation</span>—developing
+                    devices that tightly integrate with software to create powerful, reliable, and user-centric
+                    experiences. This includes exploring domains such as consumer electronics and intelligent systems.
+                    <br><br>
+                    Ultimately, the objective is to build a <span class="colorful-text">global technology company</span>
+                    that continuously innovates across software and hardware, delivering products that impact millions
+                    and shape the future of technology.
+                    <br><br>
+                    <strong style="color:#60a5fa;">
+                        Direction: Apps → Platforms → Systems → Devices → Global Tech Company
+                    </strong>
+                </p>
+            </div>
+        </section>
+
+        <section id="skills" class="fade-up">
+            <h2><i class="fas fa-cogs"></i> Skills & Strengths</h2>
+            <div class="grid">
+                <div class="card"><i class="fas fa-globe" style="color:#60a5fa; margin-right:10px;"></i> Web Development
+                </div>
+                <div class="card"><i class="fas fa-gamepad" style="color:#60a5fa; margin-right:10px;"></i> Game
+                    Development</div>
+                <div class="card"><i class="fab fa-python" style="color:#60a5fa; margin-right:10px;"></i> Python
+                    Programming</div>
+                <div class="card"><i class="fas fa-brain" style="color:#60a5fa; margin-right:10px;"></i> Machine
+                    Learning</div>
+                <div class="card"><i class="fas fa-pencil-ruler" style="color:#60a5fa; margin-right:10px;"></i> Creative
+                    Drawing</div>
+                <div class="card"><i class="fas fa-chart-line" style="color:#60a5fa; margin-right:10px;"></i> Business
+                    Strategy</div>
+            </div>
+            <div style="margin-top: 22px;">
+                <div class="card" style="border-left: 5px solid #3b82f6;">
+                    <i class="fas fa-microchip" style="color:#60a5fa; font-size:1.4rem; margin-right:10px;"></i>
+                    <strong style="color:#bfdbfe;">Hardware Engineering</strong> – circuit design, soldering,
+                    prototyping (7+ devices)
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured project section -->
+        <section id="projects" class="fade-up">
+            <h2><i class="fas fa-flask"></i> Projects</h2>
+
+            <div class="card featured-project" style="margin-bottom: 30px;">
+                <h3 style="color:#f0e6ff; display: flex; align-items:center; gap:10px;">
+                    <i class="fas fa-star" style="color:#fbbf24;"></i> Featured: Loopsme
+                </h3>
+                <p style="color:#cbd5e1; margin-top: 10px;">
+                    A scalable technology platform designed for seamless user experiences.
+                    <span class="colorful-text" style="color: #4ade80;">Currently in active development — launching
+                        soon.</span>
+                    Building the core architecture and refining the UI/UX for impact.
+                </p>
+            </div>
+
+            <div class="grid" style="margin-bottom: 30px;">
+                <div class="card project-card">
+                    <h3 style="color:#a5b4fc;"><i class="fas fa-mobile-alt"></i> Loopsme App & Website</h3>
+                    <div class="project-desc">Concept, UI design & full-stack development of scalable platform.</div>
+                </div>
+                <div class="card project-card">
+                    <h3 style="color:#a5b4fc;"><i class="fas fa-store"></i> Saree Business Website</h3>
+                    <div class="project-desc">E-commerce site for local textile business with product showcase.</div>
+                </div>
+                <div class="card project-card">
+                    <h3 style="color:#a5b4fc;"><i class="fab fa-python"></i> Python Projects (10+)</h3>
+                    <div class="project-desc">Automation scripts, logic builders, and problem-solving tools.</div>
+                </div>
+                <div class="card project-card">
+                    <h3 style="color:#a5b4fc;"><i class="fas fa-robot"></i> ML Projects (5)</h3>
+                    <div class="project-desc">Predictive models and data analysis implementations.</div>
+                </div>
+                <div class="card project-card">
+                    <h3 style="color:#a5b4fc;"><i class="fas fa-puzzle-piece"></i> Scratch Projects (100+)</h3>
+                    <div class="project-desc">Games, animations, interactive logic systems.</div>
+                </div>
+            </div>
+
+            <h3
+                style="color:#bfdbfe; margin-bottom: 18px; display: flex; align-items:center; gap:8px; text-shadow: 0 0 15px #3b82f6;">
+                <i class="fas fa-tools" style="color:#60a5fa;"></i> Engineered Hardware Projects
+            </h3>
+            <div class="grid">
+                <div class="card project-card">
+                    <h3 style="color:#e0e7ff;"><i class="fas fa-ship"></i> Working Ship Model</h3>
+                    <div class="project-desc">Functional watercraft with motor & buoyancy control.</div>
+                </div>
+                <div class="card project-card">
+                    <h3><i class="fas fa-fan"></i> Portable Fan</h3>
+                    <div class="project-desc">Custom-built cooling device with recycled components.</div>
+                </div>
+                <div class="card project-card">
+                    <h3><i class="fas fa-lightbulb"></i> Custom Lamp</h3>
+                    <div class="project-desc">Designed adjustable lamp with energy-efficient LEDs.</div>
+                </div>
+                <div class="card project-card">
+                    <h3><i class="fas fa-cogs"></i> Additional Hardware (4+)</h3>
+                    <div class="project-desc">Sensor modules, DIY gadgets, and electronic experiments.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats" class="fade-up">
+            <h2><i class="fas fa-tachometer-alt"></i> Stats</h2>
+            <div class="card" style="padding: 35px;">
+                <div class="stats">
+                    <div class="stat">
+                        <h3>100+</h3>
+                        <p>Scratch</p>
+                    </div>
+                    <div class="stat">
+                        <h3>10+</h3>
+                        <p>Python</p>
+                    </div>
+                    <div class="stat">
+                        <h3>7+</h3>
+                        <p>Hardware</p>
+                    </div>
+                    <div class="stat">
+                        <h3>5</h3>
+                        <p>ML Models</p>
+                    </div>
+                    <div class="stat">
+                        <h3>40+</h3>
+                        <p>Drawings</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="beyond" class="fade-up">
+            <h2><i class="fas fa-medal"></i> Beyond Tech</h2>
+            <div class="grid">
+                <div class="card"><i class="fas fa-swimmer" style="font-size:2.2rem; color:#60a5fa;"></i>
+                    <h3 style="margin-top:12px;">Swimming</h3>
+                    <p>Competitive spirit, endurance.</p>
+                </div>
+                <div class="card"><i class="fas fa-shuttlecock" style="font-size:2.2rem; color:#60a5fa;"></i>
+                    <h3 style="margin-top:12px;">Badminton</h3>
+                    <p>Agility & precision.</p>
+                </div>
+                <div class="card"><i class="fas fa-paint-brush" style="font-size:2.2rem; color:#60a5fa;"></i>
+                    <h3 style="margin-top:12px;">40+ Drawings</h3>
+                    <p>Pencil, concept, technical sketches.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="fade-up">
+            <h2><i class="fas fa-rocket"></i> Future Plans</h2>
+            <div class="card">
+                <p style="color:#d9ccff;">Scaling apps, launching hardware startup, entering smartphone & automotive
+                    industries.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="fade-up">
+            <h2><i class="fas fa-paper-plane"></i> Contact</h2>
+            <div class="card">
+                <p style="margin-bottom: 22px; color:#c0b4f0;">
+                    <i class="fas fa-shield-alt" style="color:#60a5fa;"></i> Send a message — I'll get back within 24h.
+                </p>
+                <form class="contact-form" id="contact-form" action="https://formspree.io/f/mojyyzqd" method="POST">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
+                    <div id="form-status"
+                        style="margin-top: 15px; font-size: 0.9rem; border-radius: 8px; transition: 0.3s; padding: 0;">
+                    </div>
+                </form>
+                <p style="margin-top: 16px; font-size:0.85rem; color:#8b9ac0;">
+                    <i class="fas fa-envelope"></i> Alternatively, reach out via email (displayed after submission).
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Dipankar — Industrial Grade Portfolio | <span class="colorful-text">Hardware • Code • Design</span>
+        </p>
+        <p style="margin-top: 10px;"><i class="fas fa-map-pin"></i> Engineered for impact.</p>
+    </footer>
+
+    <script>
+        (function () {
+            const cursor = document.getElementById('cursor');
+            const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+            if (isDesktop && cursor) {
+                cursor.style.display = 'flex';
+
+                let mouseX = 0, mouseY = 0;
+                let cursorX = 0, cursorY = 0;
+
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                });
+
+                document.addEventListener('mousedown', () => cursor.classList.add('clicked'));
+                document.addEventListener('mouseup', () => cursor.classList.remove('clicked'));
+
+                // Smooth cursor follow
+                function animateCursor() {
+                    cursorX += (mouseX - cursorX) * 0.2;
+                    cursorY += (mouseY - cursorY) * 0.2;
+                    cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+                    requestAnimationFrame(animateCursor);
+                }
+                animateCursor();
+
+                const hoverElements = document.querySelectorAll('a, button, .card, .project-card, input, textarea, .badge, .stat, .tagline span');
+                hoverElements.forEach(el => {
+                    el.addEventListener('mouseenter', (e) => {
+                        cursor.classList.add('hover');
+                        if (el.classList.contains('nav-links')) return; // skip for nav links container
+
+                        // Magnetic frame logic for buttons/cards
+                        if (el.tagName === 'BUTTON' || el.classList.contains('card')) {
+                            const rect = el.getBoundingClientRect();
+                            // Optional: Snap cursor to center or expand to frame
+                        }
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursor.classList.remove('hover');
+                    });
+                });
+
+                document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+                document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
+            }
+
+            // Scroll animations
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: "0px 0px -20% 0px"
+            };
+
+            const intersectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+
+                        // Update Nav Active State
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(s => intersectionObserver.observe(s));
+            document.querySelectorAll('.fade-up').forEach(el => intersectionObserver.observe(el));
+
+            // Form submission (AJAX)
+            const form = document.getElementById('contact-form');
+            const status = document.getElementById('form-status');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const data = new FormData(form);
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                    status.style.padding = '12px';
+                    status.style.background = 'rgba(255,255,255,0.05)';
+                    status.style.color = '#ffffff';
+                    status.innerText = 'Initializing delivery...';
+
+                    try {
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            body: data,
+                            headers: { 'Accept': 'application/json' }
+                        });
+
+                        if (response.ok) {
+                            status.style.background = 'rgba(74, 222, 128, 0.1)';
+                            status.style.color = '#4ade80';
+                            status.innerHTML = '<i class="fas fa-check-circle"></i> Message sent successfully! I\'ll reply soon.';
+                            form.reset();
+                        } else {
+                            const result = await response.json();
+                            status.style.background = 'rgba(239, 68, 68, 0.1)';
+                            status.style.color = '#ef4444';
+                            status.innerText = result.errors ? result.errors.map(error => error.message).join(", ") : "Oops! There was a problem.";
+                        }
+                    } catch (error) {
+                        status.style.background = 'rgba(239, 68, 68, 0.1)';
+                        status.style.color = '#ef4444';
+                        status.innerText = "Connection error. Please try again later.";
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>
