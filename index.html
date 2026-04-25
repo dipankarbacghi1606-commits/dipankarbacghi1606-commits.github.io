@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+     <meta name="google-site-verification" content="n_S85UqPOAjyPMNWuP9wBljBiiwoKk9G_3sl8q3kNcQ" />
     <title>Dipankar | Hardware Builder & Tech Portfolio</title>
-    <meta name="google-site-verification" content="n_S85UqPOAjyPMNWuP9wBljBiiwoKk9G_3sl8q3kNcQ" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;700;800&display=swap"
@@ -252,7 +253,12 @@
 
         header {
             text-align: center;
-            padding: 120px 20px 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
         }
 
         .hero-hook {
@@ -486,6 +492,115 @@
 
             header {
                 padding: 80px 20px 40px;
+                min-height: auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .card {
+                padding: 24px;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+
+            .nav-links {
+                width: 90%;
+                padding: 6px 12px;
+            }
+
+            .nav-links a {
+                font-size: 0.75rem;
+                padding: 8px 12px;
+            }
+
+            section {
+                margin-bottom: 60px;
+            }
+
+            header {
+                padding: 60px 20px 30px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 14px 32px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .stat {
+                text-align: center;
+            }
+
+            .tagline {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .tagline span {
+                padding: 5px 14px;
+                font-size: 0.8rem;
+            }
+
+            .nav-links {
+                width: 95%;
+                bottom: 20px;
+            }
+
+            .nav-links a {
+                font-size: 0.7rem;
+                padding: 6px 10px;
+            }
+
+            section {
+                margin-bottom: 50px;
+            }
+
+            header {
+                padding: 50px 15px 25px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+
+            button {
+                padding: 12px 28px;
+                font-size: 0.8rem;
+            }
+
+            footer {
+                padding: 60px 15px;
             }
         }
     </style>
