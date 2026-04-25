@@ -245,6 +245,12 @@
             margin-top: 14px;
         }
 
+        .project-card.active .project-desc {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 14px;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -962,6 +968,22 @@
                 document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
                 document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
             }
+
+            // Mobile project card tap support
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    projectCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                });
+            });
+
+            // Close project card when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.project-card')) {
+                    projectCards.forEach(c => c.classList.remove('active'));
+                }
+            });
 
             // Scroll animations
             const sections = document.querySelectorAll('section');
